@@ -4,36 +4,6 @@ from stack import Stack
 from queue import Queue
 
 
-class PlusOperator():
-    def __init__(self):
-        self.type = '+'
-        self.priority = 1
-
-
-class ReductionOperator():
-    def __init__(self):
-        self.type = '-'
-        self.priority = 1
-
-
-class MultiplicationOperator():
-    def __init__(self):
-        self.type = '*'
-        self.priority = 2
-
-
-class DivsionOperator():
-    def __init__(self):
-        self.type = '/'
-        self.priority = 2
-
-
-class LeftBracket():
-    def __init__(self):
-        self.type = '('
-        self.priority = 9
-
-
 class RightBracket():
     def __init__(self):
         self.type = ')'
@@ -47,12 +17,6 @@ class RailExpress():
         self.size = len(express)
         self.stack = Stack(self.size)
         self.queue = Queue(self.size)
-        # self.plus = PlusOperator()
-        # self.reduction = ReductionOperator()
-        # self.mul = MultiplicationOperator()
-        # self.divsion = DivsionOperator()
-        # self.left = LeftBracket()
-        # self.right = RightBracket()
 
         self.level = {'+': 1, '-':  1, '*': 2, '/': 2, '(': 3, ')': 3}
         self.operators = ['+', '-', '*', '/', '(', ')']
