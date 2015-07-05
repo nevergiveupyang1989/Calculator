@@ -36,6 +36,9 @@ class Stack():
     def returnFristEle(self):
         return self.stack[self.top]
 
+    def returnStack(self):
+        return self.stack
+
 if __name__ == '__main__':
     s = Stack(1)
 

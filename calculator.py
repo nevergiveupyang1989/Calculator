@@ -1,6 +1,7 @@
 #python
 #coding=utf-8
 from stack import Stack
+from queue import Queue
 
 
 class PlusOperator():
@@ -45,55 +46,52 @@ class RailExpress():
         self.railExpress = []
         self.size = len(express)
         self.stack = Stack(self.size)
-        self.plus = PlusOperator()
-        self.reduction = ReductionOperator()
-        self.mul = MultiplicationOperator()
-        self.divsion = DivsionOperator()
-        self.left = LeftBracket()
-        self.right = RightBracket()
+        self.queue = Queue(self.size)
+        # self.plus = PlusOperator()
+        # self.reduction = ReductionOperator()
+        # self.mul = MultiplicationOperator()
+        # self.divsion = DivsionOperator()
+        # self.left = LeftBracket()
+        # self.right = RightBracket()
 
-        self.operator = {'+': self.plus, '-':  self.reduction, '*': self.mul, '/': self.divsion, '(': self.left, ')': self.right}
+        self.level = {'+': 1, '-':  1, '*': 2, '/': 2, '(': 3, ')': 3}
+        self.operators = ['+', '-', '*', '/', '(', ')']
+
         self.makeRailExpress()
 
     def makeRailExpress(self):
-        for i in xrange(self.size):
-            if (self.fontExpress[i] >= '0') and (self.fontExpress[i] <= '9'):
-                self.railExpress.append(self.fontExpress[i])
+        for i in express:
+            if i in self.operators:
+                if i is self.operators[-1]:
+                    ele = self.stack.pop()
+
+                    while ele is not self.operators[-2]:
+                        self.queue.push(ele)
+                        ele = self.stack.pop()
+
+                        if self.stack.isEmpty():
+                            break
+
+                elif i is self.operators[-2]:
+                    self.stack.push(i)
+
+                else:
+                    if not self.stack.isEmpty():
+                        while self.stack.returnFristEle() is not self.operators[-2] and self.level[self.stack.returnFristEle()] >= self.level[i]:
+                            ele = self.stack.pop()
+                            self.queue.push(ele)
+
+                            if self.stack.isEmpty():
+                                break
+
+                    self.stack.push(i)
             else:
-                if self.stack.isEmpty():
-                    self.stack.push(self.operator[self.fontExpress[i]])
-                else:
-                    ele = self.fontExpress[i]
-                    self.compareOperator(ele)
+                self.queue.push(i)
 
-        while not (self.stack.isEmpty()):
-            ele = self.stack.pop()
-            self.railExpress.append(ele.type)
-
-    def compareOperator(self, operator):
-        operatorDic = {'+': 1, '-': 1, '*': 2, '/': 2, '(': 9, ')': 9}
-
-        if(operatorDic[operator]) - (self.stack.stack[self.stack.top].priority) == -1:
-            while (operatorDic[operator]) - (self.stack.stack[self.stack.top].priority) == -1:
-                ele = self.stack.pop()
-                self.railExpress.append(ele.type)
-                if self.stack.stack[self.stack.top - 1] == self.operator[operator]:
-                    self.railExpress.append(operator)
-                else:
-                    self.stack.push(self.operator[operator])
-
-        elif(operator is '('):
-            self.stack.push(self.operator[operator])
-
-        elif(operator is ')'):
-            while 1:
-                ele = self.stack.pop()
-                if not isinstance(ele, LeftBracket):
-                    self.railExpress.append(ele.type)
-                else:
-                    break
-        else:
-            self.stack.push(self.operator[operator])
+        if not self.stack.isEmpty():
+            stack = self.stack.returnStack()
+            stack.reverse()
+            self.queue.returnQueue().extend(stack)
 
 
 class CheckExpress():
@@ -168,6 +166,6 @@ if __name__ == '__main__':
     express = raw_input('输入表达式：')
     express = CheckExpress(express).checkExpress()
     rail = RailExpress(express)
-
-    calculate = Calculator(rail.railExpress)
+    queue = rail.queue.returnQueue()
+    calculate = Calculator(queue)
     print calculate.result

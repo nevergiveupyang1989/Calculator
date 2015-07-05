@@ -34,6 +34,9 @@ class Queue():
             ele = self.queue.pop(0)
         return ele
 
+    def returnQueue(self):
+        return self.queue
+
 
 if __name__ == '__main__':
     queue = Queue(10)
