@@ -4,12 +4,6 @@ from stack import Stack
 from queue import Queue
 
 
-class RightBracket():
-    def __init__(self):
-        self.type = ')'
-        self.priority = 9
-
-
 class RailExpress():
     def __init__(self, express):
         self.fontExpress = express
@@ -24,7 +18,7 @@ class RailExpress():
         self.makeRailExpress()
 
     def makeRailExpress(self):
-        for i in express:
+        for i in self.fontExpress:
             if i in self.operators:
                 if i is self.operators[-1]:
                     ele = self.stack.pop()
@@ -60,6 +54,8 @@ class RailExpress():
 
 class CheckExpress():
     def __init__(self, express):
+        if len(express) > 10000:
+            sys.exit(0)
         self.express = express
 
     def checkExpress(self):
@@ -73,14 +69,16 @@ class CheckExpress():
                     express.append(each)
                     count += 1
 
-                elif (express[count] > '0') and (express[count] < '9'):
+                elif (express[count] >= '0') and (express[count] <= '999999'):
+                    length = len(express)
                     express[length - 1] = express[length - 1] + each
                 else:
                     express.append(each)
                     count += 1
             else:
-                express.append(each)
-                count += 1
+                if each == '+' or each == '-' or each == '*' or each == '/':
+                    express.append(each)
+                    count += 1
 
         return express
 
@@ -96,7 +94,7 @@ class Calculator():
 
     def operatorRailExpress(self):
         for each in self.express:
-            if (each >= '0') and (each <= '9'):
+            if (each >= '0') and (each <= '999999'):
                 self.stack.push(each)
 
             else:
@@ -126,9 +124,15 @@ class Calculator():
     def devision(self, one, two):
         return int(one)/int(two)
 
+import sys
 if __name__ == '__main__':
     express = raw_input('输入表达式：')
+
     express = CheckExpress(express).checkExpress()
+    if len(express) == 1:
+        print express[0]
+        sys.exit(0)
+
     rail = RailExpress(express)
     queue = rail.queue.returnQueue()
     calculate = Calculator(queue)
