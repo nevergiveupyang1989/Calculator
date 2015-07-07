@@ -44,4 +44,10 @@ if __name__ == '__main__':
         s.push(i)
     print s.stack, s.top
 
+    # express = ['(','1',')']
+    # if '+' not in express or '-' not in express or '*' not in express or '/' not in express:
+    #     for each in xrange(len(express)):
+    #         if each <= len(express)-1 and (express[each] is '(' or express[each] is ')'):
+    #             del express[each]
+    #     print express[0]
 

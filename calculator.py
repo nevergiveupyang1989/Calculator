@@ -63,20 +63,20 @@ class CheckExpress():
         count = -1
 
         for each in self.express:
-            if (each >= '0') and (each <= '9'):
+            if (each >= '0') and (each <= '9') or (each == '.'):
                 length = len(express)
                 if length == 0:
                     express.append(each)
                     count += 1
 
-                elif (express[count] >= '0') and (express[count] <= '999999'):
+                elif (express[count] >= '0') and (express[count] <= '999999') or (each == '.'):
                     length = len(express)
                     express[length - 1] = express[length - 1] + each
                 else:
                     express.append(each)
                     count += 1
             else:
-                if each == '+' or each == '-' or each == '*' or each == '/':
+                if each == '+' or each == '-' or each == '*' or each == '/' or each == '(' or each == ')':
                     express.append(each)
                     count += 1
 
@@ -113,16 +113,34 @@ class Calculator():
         return temp
 
     def plus(self, one, two):
-        return int(one)+int(two)
+        return float(one)+float(two)
 
     def reduction(self, one, two):
-        return int(one)-int(two)
+        return float(one)-float(two)
 
     def multiplicate(self, one, two):
-        return int(one)*int(two)
+        return float(one)*float(two)
 
     def devision(self, one, two):
-        return int(one)/int(two)
+        return float(one)/float(two)
+
+
+class ConnectView():
+    def __init__(self, model):
+        self._model = model
+
+    def calculator(self):
+        express = CheckExpress(self._model.result).checkExpress()
+        if len(express) == 1:
+            sys.exit(0)
+
+        rail = RailExpress(express)
+        queue = rail.queue.returnQueue()
+        if len(queue) == 1:
+
+            sys.exit(0)
+        calculate = Calculator(queue)
+        self._model.result = str(calculate.result)
 
 import sys
 if __name__ == '__main__':
@@ -130,10 +148,12 @@ if __name__ == '__main__':
 
     express = CheckExpress(express).checkExpress()
     if len(express) == 1:
-        print express[0]
         sys.exit(0)
 
     rail = RailExpress(express)
     queue = rail.queue.returnQueue()
+    if len(queue) == 1:
+        print int(queue[0])
+        sys.exit(0)
     calculate = Calculator(queue)
     print calculate.result
